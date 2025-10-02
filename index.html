@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Reporte de Ciberseguridad - Excel</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Barra de Navegación -->
+        <div class="nav-bar">
+            <div class="nav-title">
+                <h2>🛡️ Sistema de Ciberseguridad</h2>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active">📝 Nuevo Reporte</a>
+                <a href="reportes.html" class="nav-link">📋 Ver Reportes</a>
+            </div>
+        </div>
+
+        <div class="header">
+            <h1>🛡️ Generador de Reporte de Ciberseguridad</h1>
+            <p>Completa los campos y genera tu archivo Excel profesional</p>
+        </div>
+        
+        <div class="content">
+            <div class="instructions">
+                <h3>📋 Instrucciones</h3>
+                <ul>
+                    <li>Completa todos los campos del formulario con la información de la semana</li>
+                    <li>Puedes agregar hasta 5 incidentes relevantes</li>
+                    <li>Al hacer clic en "Guardar", se guardarán los datos en la base de datos y se descarga en .xlsx</li>
+                    <li>Usa "Limpiar Formulario" para empezar desde cero</li>
+                </ul>
+            </div>
+            
+            <form id="reportForm">
+                <!-- Información General -->
+                <div class="form-section">
+                    <h2>Información General</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Semana:</label>
+                            <input type="text" id="week" name="week" placeholder="Ej: Semana 40" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Rango de Fechas:</label>
+                            <input type="text" id="dateRange" name="dateRange" placeholder="Ej: 30 Sep - 06 Oct 2025" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Estado General:</label>
+                            <select id="overallStatus" name="overallStatus" required>
+                                <option value="">Seleccione estado...</option>
+                                <option value="green">🟢 Operación Normal</option>
+                                <option value="yellow">🟡 Requiere Atención</option>
+                                <option value="red">🔴 Situación Crítica</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Resumen de Incidentes -->
+                <div class="form-section">
+                    <h2>Resumen de Incidentes</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Total de Incidentes:</label>
+                            <input type="number" id="totalIncidents" name="totalIncidents" value="0" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Semana Anterior:</label>
+                            <input type="number" id="previousWeek" name="previousWeek" value="0" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tasa de Resolución (%):</label>
+                            <input type="number" id="resolutionRate" name="resolutionRate" value="0" min="0" max="100" required>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Incidentes por Categoría -->
+                <div class="form-section">
+                    <h2>Incidentes por Categoría</h2>
+                    <div id="categoriasContainer">
+                        <!-- Las categorías se cargarán dinámicamente aquí -->
+                        <div class="loading">Cargando categorías...</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Total de Incidentes (debe coincidir con la suma de categorías):</label>
+                        <input type="number" id="totalIncidents" name="totalIncidents" value="0" min="0" required onchange="validarTotalCategorias()">
+                        <small id="totalCategoriasError" style="color: red; display: none;">⚠️ La suma de categorías no coincide con el total</small>
+                    </div>
+                </div>
+            
+                <!-- KPIs -->
+                <div class="form-section">
+                    <h2>Indicadores Clave (KPIs)</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Tiempo Promedio de Respuesta:</label>
+                            <input type="text" id="avgResponse" name="avgResponse" placeholder="Ej: 15 min" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Incidentes Resueltos (%):</label>
+                            <input type="text" id="resolved" name="resolved" placeholder="Ej: 100%" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Variación vs. Semana Anterior:</label>
+                            <input type="text" id="variation" name="variation" placeholder="Ej: -20%" required>
+                        </div>
+                    </div>
+                </div>
+                            
+                <!-- Incidentes Relevantes -->
+                <div class="form-section">
+                    <h2>Incidentes Relevantes (Top 3-5)</h2>
+                    <div id="incidentsContainer">
+                        <div class="incident-card">
+                            <h3>Incidente #1</h3>
+                            <div class="form-group">
+                                <label>Título:</label>
+                                <input type="text" class="incident-title" name="incidentTitle[]" placeholder="Ingrese título del incidente" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Descripción:</label>
+                                <textarea class="incident-desc" name="incidentDesc[]" placeholder="Describa el incidente..." required></textarea>
+                            </div>
+                            <div class="form-grid form-grid-3">
+                                <div class="form-group">
+                                    <label>Categoría:</label>
+                                    <select class="incident-categoria" name="incidentCategoria[]" required>
+                                        <option value="">Seleccione categoría...</option>
+                                        <!-- Las opciones se cargarán dinámicamente -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Impacto:</label>
+                                    <select class="incident-impact" name="incidentImpact[]" required>
+                                        <option value="">Seleccione impacto...</option>
+                                        <option value="Bajo">Bajo</option>
+                                        <option value="Medio">Medio</option>
+                                        <option value="Alto">Alto</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Estado:</label>
+                                    <select class="incident-status" name="incidentStatus[]" required>
+                                        <option value="">Seleccione estado...</option>
+                                        <option value="Resuelto">Resuelto</option>
+                                        <option value="En Proceso">En Proceso</option>
+                                        <option value="Pendiente">Pendiente</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Acción Tomada:</label>
+                                <textarea class="incident-action" name="incidentAction[]" placeholder="Describa las acciones tomadas..." required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="add-incident-btn" onclick="addIncident()">➕ Agregar Incidente</button>
+                </div>
+            
+                <!-- Recomendaciones -->
+                <div class="form-section">
+                    <h2>Acciones y Recomendaciones</h2>
+                    <div class="form-group">
+                        <label>Necesidades Inmediatas:</label>
+                        <textarea id="needs" name="needs" rows="3" placeholder="Describa las necesidades inmediatas..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Recomendaciones para Prevención:</label>
+                        <textarea id="recommendations" name="recommendations" rows="3" placeholder="Describa las recomendaciones..." required></textarea>
+                    </div>
+                </div>
+            
+                <div class="button-group">
+                    <button type="button" class="generate-btn save-btn" onclick="saveToDatabase()">💾 Guardar</button>
+                    <button type="button" class="generate-btn clear-btn" onclick="clearForm()">🗑️ Limpiar Formulario</button>
+                  
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para mensajes -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Título del Modal</h3>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">Mensaje del modal</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-ok-btn" onclick="closeModal()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/xlsx.full.min.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/script.js"></script>
+</body>
+</html>

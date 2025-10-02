@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Reportes - Sistema de Ciberseguridad</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Barra de Navegación -->
+        <div class="nav-bar">
+            <div class="nav-title">
+                <h2>🛡️ Sistema de Ciberseguridad</h2>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">📝 Nuevo Reporte</a>
+                <a href="reportes.html" class="nav-link active">📋 Ver Reportes</a>
+            </div>
+        </div>
+
+        <div class="header">
+            <h1>📋 Lista de Reportes de Ciberseguridad</h1>
+            <p>Gestiona y descarga todos los reportes registrados en el sistema</p>
+        </div>
+        
+        <div class="content">
+            <!-- Barra de acciones -->
+            <!--<div class="action-bar">
+                <a href="index.html" class="btn btn-primary">📝 Nuevo Reporte</a>
+                <button onclick="loadReportes()" class="btn btn-secondary">🔄 Actualizar Lista</button>
+            </div>-->
+
+            <!-- Filtros -->
+            <div class="filters-section">
+                <h3>🔍 Filtros</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Buscar por semana:</label>
+                        <input type="text" id="searchWeek" placeholder="Ej: Semana 40" onkeyup="filterReportes()">
+                    </div>
+                    <div class="form-group">
+                        <label>Estado general:</label>
+                        <select id="filterStatus" onchange="filterReportes()">
+                            <option value="">Todos los estados</option>
+                            <option value="green">🟢 Operación Normal</option>
+                            <option value="yellow">🟡 Requiere Atención</option>
+                            <option value="red">🔴 Situación Crítica</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mostrar:</label>
+                        <select id="itemsPerPage" onchange="filterReportes()">
+                            <option value="10">10 reportes</option>
+                            <option value="25">25 reportes</option>
+                            <option value="50">50 reportes</option>
+                            <option value="100">100 reportes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estadísticas -->
+            <div id="estadisticas" class="stats-container" style="display: none;">
+                <h3>📊 Estadísticas</h3>
+                <div class="stats-grid" id="statsContent">
+                    <!-- Las estadísticas se cargarán aquí -->
+                </div>
+            </div>
+
+            <!-- Tabla de reportes -->
+            <div class="table-container">
+                <div id="loadingMessage" class="loading">Cargando reportes...</div>
+                <div id="noDataMessage" class="no-data" style="display: none;">
+                    <p>No se encontraron reportes registrados.</p>
+                    <a href="index.html" class="btn btn-primary">Crear primer reporte</a>
+                </div>
+                
+                <table id="reportesTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Semana</th>
+                            <th>Rango de Fechas</th>
+                            <th>Estado</th>
+                            <th>Total Incidentes</th>
+                            <th>Tasa Resolución</th>
+                            <th>Fecha Registro</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportesBody">
+                        <!-- Los reportes se cargarán aquí -->
+                    </tbody>
+                </table>
+
+                <!-- Paginación -->
+                <div id="pagination" class="pagination" style="display: none;">
+                    <button id="prevPage" class="pagination-btn" onclick="changePage(-1)">← Anterior</button>
+                    <span id="pageInfo" class="page-info">Página 1 de 1</span>
+                    <button id="nextPage" class="pagination-btn" onclick="changePage(1)">Siguiente →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para mensajes -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Título del Modal</h3>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">Mensaje del modal</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-ok-btn" onclick="closeModal()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/xlsx.full.min.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/reportes.js"></script>
+</body>
+</html>
