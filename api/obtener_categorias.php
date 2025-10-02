@@ -1,4 +1,6 @@
 <?php
+require_once 'config.php';
+
 header('Content-Type: application/json');
 
 // Función para enviar errores en formato JSON
@@ -12,14 +14,7 @@ function sendError($message, $code = 500) {
 }
 
 try {
-    // Datos de conexión
-    $host = "localhost";
-    $user = "root";      
-    $pass = "";          
-    $db   = "ciberseguridad";
-
-    // Conectar
-    $conn = new mysqli($host, $user, $pass, $db);
+    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     
     if ($conn->connect_error) {
         sendError('Error de conexión a la base de datos: ' . $conn->connect_error);

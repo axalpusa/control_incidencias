@@ -1,4 +1,5 @@
 <?php
+require_once 'config.php';
 // Configuración de errores
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -42,14 +43,7 @@ try {
         sendError('ID de reporte inválido: ' . $idReporte, 400);
     }
 
-    // Datos de conexión
-    $host = "localhost";
-    $user = "root";      
-    $pass = "";          
-    $db   = "ciberseguridad";
-
-    // Conectar
-    $conn = new mysqli($host, $user, $pass, $db);
+    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     
     if ($conn->connect_error) {
         sendError('Error de conexión a la base de datos: ' . $conn->connect_error);
